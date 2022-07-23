@@ -164,7 +164,7 @@ const addReservation = async (req, res) => {
     await client.connect();
     const findExistingEmailInThisFlight = await db
       .collection("reservations")
-      .findOne({ email: body.email });
+      .findOne({ flight: body.flight, email: body.email });
     if (findExistingEmailInThisFlight) {
       return res.status(400).json({
         status: 400,
@@ -229,15 +229,17 @@ const addReservation = async (req, res) => {
 // updates an existing reservation
 const updateReservation = async (req, res) => {
   const body = req.body;
-  // supposed this method wil have a req.body with this format: {
   // this case we only verify by _id, much faster but incase we dont have this _id, we have to go with longer way
-  //   "reservation_id": "56d9dcad-3827-4928-9119-736cf48de632"
+  // supposed this method wil have a req.body with this format: {
+  //   "reservation_id": "56d9dcad-3827-4928-9119-736cf48de632",
   // 	"updateFlightNumberTo": "SA235",
   // 	"updateSeatTo": "4D",
   // 	"updateGivenNameTo": "Boll",
   // 	"updateSurnameTo": "Freezee",
   // 	"updateEmailTo": "Boll@bFreezee.com"
   // }
+  //
+  // make sure the user fill out all the information
   if (
     !body.reservation_id ||
     !body.updateFlightNumberTo ||
@@ -252,7 +254,7 @@ const updateReservation = async (req, res) => {
       message: "Please fill out all the required informations",
     });
   }
-  // make sure the user fill out all the information
+  //
 
   try {
     client.connect();
@@ -262,81 +264,173 @@ const updateReservation = async (req, res) => {
     // find the existing reservation with the provided reservation id
     console.log("update", reservationWillBeUpdated);
 
-    if (reservationWillBeUpdated) {
-      if (
-        body.reservation_id.toUpperCase() ===
-          reservationWillBeUpdated._id.toUpperCase() &&
-        body.updateFlightNumberTo.toUpperCase() ===
-          reservationWillBeUpdated.flight.toUpperCase() &&
-        body.updateSeatTo.toUpperCase() ===
-          reservationWillBeUpdated.seat.toUpperCase() &&
-        body.updateGivenNameTo.toUpperCase() ===
-          reservationWillBeUpdated.givenName.toUpperCase() &&
-        body.updateSurnameTo.toUpperCase() ===
-          reservationWillBeUpdated.surname.toUpperCase() &&
-        body.updateEmailTo.toUpperCase() ===
-          reservationWillBeUpdated.email.toUpperCase()
-      ) {
-        return res.status(400).json({
-          status: 400,
-          data: {},
-          message: "You did not change any information",
-        });
-      } else {
-        const returnOldSeatToAvailable = await db
-          .collection("flights")
-          .updateOne(
-            {
-              flight: reservationWillBeUpdated.flight,
-              "seats.id": reservationWillBeUpdated.seat,
-            },
-            { $set: { "seats.$.isAvailable": true } }
-          );
-        const updateNewSeat = await db.collection("flights").updateOne(
-          {
-            flight: body.updateFlightNumberTo,
-            "seats.id": body.updateSeatTo,
-          },
-          { $set: { "seats.$.isAvailable": false } }
-        );
-        // update all the information after switch isAvailable to true and false
-        const updateInformation = await db.collection("reservations").updateOne(
-          { _id: body.reservation_id },
-          {
-            $set: {
-              flight: body.updateFlightNumberTo.toUpperCase(),
-              seat: body.updateSeatTo.toUpperCase(),
-              givenName: body.updateGivenNameTo,
-              surname: body.updateSurnameTo,
-              email: body.updateEmailTo,
-            },
-          }
-        );
+    //
+    // Verify the reservation that user want to change is found by id before make some changes on it
 
-        const updatedReservation = {
-          _id: uuidv4(),
-          updated: reservationWillBeUpdated,
-        };
-        const pushToUpdatedReservation = await db
-          .collection("updatedReservations")
-          .insertOne(updatedReservation);
-      }
-      // push the updated reservation to updatedReservations collection for tracking purpose
-      return res.status(200).json({
-        status: 200,
-        data: body,
-        message: `You successfully update reservation with id: ${body.reservation_id} `,
-      });
-    }
-
-    // return res.status(200).json({ data: retrieveSingleReservation });
-    else {
+    if (!reservationWillBeUpdated) {
       return res.status(404).json({
         status: 404,
         data: {},
         message: `Could not find the reservation with id: ${body.reservation_id}`,
       });
     }
+    //
+    //
+    // Make sure we dont update anything if the user did not change anything
+
+    const newFlight = body.updateFlightNumberTo.toUpperCase();
+    const oldFlight = reservationWillBeUpdated.flight.toUpperCase();
+    const newSeat = body.updateSeatTo.toUpperCase();
+    const oldSeat = reservationWillBeUpdated.seat.toUpperCase();
+    const newGivenName = body.updateGivenNameTo.toUpperCase();
+    const oldGivenName = reservationWillBeUpdated.givenName.toUpperCase();
+    const newSurname = body.updateSurnameTo.toUpperCase();
+    const oldSurname = reservationWillBeUpdated.surname.toUpperCase();
+    const newEmail = body.updateEmailTo.toUpperCase();
+    const oldEmail = reservationWillBeUpdated.email.toUpperCase();
+    if (
+      newFlight === oldFlight &&
+      newSeat === oldSeat &&
+      newGivenName === oldGivenName &&
+      newSurname === oldSurname &&
+      newEmail === oldEmail
+    ) {
+      return res.status(400).json({
+        status: 400,
+        data: {},
+        message: "You did not change any information",
+      });
+    }
+    //
+
+    //
+    // in case the user does not change flight and seat number, we only update the reservations collection and keep tracking
+    if (newFlight === oldFlight && newSeat === oldSeat) {
+      const updateInformation = await db.collection("reservations").updateOne(
+        { _id: body.reservation_id },
+        {
+          $set: {
+            flight: newFlight,
+            seat: newSeat,
+            givenName: body.updateGivenNameTo,
+            surname: body.updateSurnameTo,
+            email: body.updateEmailTo,
+          },
+        }
+      );
+
+      const updatedReservation = {
+        _id: uuidv4(),
+        updated: reservationWillBeUpdated,
+      };
+      const pushToUpdatedReservation = await db
+        .collection("updatedReservations")
+        .insertOne(updatedReservation);
+      //push the updatedReservation to  pushToUpdatedReservation collection for keep tracking purpose
+      return res.status(200).json({
+        status: 200,
+        data: body,
+        message: `You successfully update reservation with id: ${body.reservation_id} `,
+      });
+    }
+    //
+
+    // Verify the flight that user wants to update to is existing
+    const findFlightWantToChange = await db
+      .collection("flights")
+      .findOne({ flight: newFlight });
+
+    if (!findFlightWantToChange) {
+      return res.status(404).json({
+        status: 404,
+        data: {},
+        message:
+          "The flight you want to change to does not exist, please try another one",
+      });
+    }
+    //
+
+    // Verify the seat number that user wants to update to is existing
+
+    const checkSeatToChangeNotBookedYet = findFlightWantToChange.seats.find(
+      (seat) => seat.id === newSeat && seat.isAvailable === true
+    );
+    if (!checkSeatToChangeNotBookedYet) {
+      return res.status(404).json({
+        status: 404,
+        data: {},
+        message: `The seat  ${body.updateSeatTo} in flight ${body.updateFlightNumberTo} that you want to change to was already booked by another one or it does not exist `,
+      });
+    }
+    //
+    //
+    // Incase the user wants to change flight or seat number after verifying those numbers are still available or existing
+
+    if (newFlight !== oldFlight || newSeat !== oldSeat) {
+      const updateNewSeat = await db.collection("flights").updateOne(
+        {
+          flight: body.updateFlightNumberTo,
+          "seats.id": body.updateSeatTo,
+        },
+        { $set: { "seats.$.isAvailable": false } }
+      );
+      if (updateNewSeat.modifiedCount > 0) {
+        // This step make sure that the new updating book new seat successfully before transfer the old seat back to available
+        try {
+          // I use try...catch here to guarantee the slingair's money that the old seat should come back to available, if not we can see some err
+          const returnOldSeatToAvailable = await db
+            .collection("flights")
+            .updateOne(
+              {
+                flight: reservationWillBeUpdated.flight,
+                "seats.id": reservationWillBeUpdated.seat,
+              },
+              { $set: { "seats.$.isAvailable": true } }
+            );
+
+          // update all the information after switch isAvailable to true and false
+          const updateInformation = await db
+            .collection("reservations")
+            .updateOne(
+              { _id: body.reservation_id },
+              {
+                $set: {
+                  flight: newFlight,
+                  seat: newSeat,
+                  givenName: body.updateGivenNameTo,
+                  surname: body.updateSurnameTo,
+                  email: body.updateEmailTo,
+                },
+              }
+            );
+
+          const updatedReservation = {
+            _id: uuidv4(),
+            updated: reservationWillBeUpdated,
+          };
+          const pushToUpdatedReservation = await db
+            .collection("updatedReservations")
+            .insertOne(updatedReservation);
+          // push the updated reservation to updatedReservations collection for tracking purpose
+
+          return res.status(200).json({
+            status: 200,
+            data: body,
+            message: `You successfully update reservation with id: ${body.reservation_id} `,
+          });
+        } catch (err) {
+          console.log("err from returnOldSeatToAvailable", err);
+        }
+      } else {
+        return res.status(400).json({
+          status: 400,
+          data: {},
+          message: `You DID NOT successfully update reservation with id: ${body.reservation_id} `,
+        });
+      }
+    }
+
+    //
   } catch (err) {
     console.log("err from updateReservation", err);
   }
