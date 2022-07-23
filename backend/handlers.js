@@ -162,15 +162,25 @@ const addReservation = async (req, res) => {
   }
   try {
     await client.connect();
-    const findExistingEmailInThisFlight = await db
+
+    const findGroupOfreservations = await db
       .collection("reservations")
-      .findOne({ flight: body.flight, email: body.email });
+      .find({ flight: body.flight })
+      .toArray();
+
+    const findExistingEmailInThisFlight = findGroupOfreservations.find(
+      (reservation) =>
+        reservation.email.toLocaleLowerCase() === body.email.toLocaleLowerCase()
+    );
+
+    console.log("group", findGroupOfreservations);
     if (findExistingEmailInThisFlight) {
       return res.status(400).json({
         status: 400,
         data: body.email,
         message: `The email ${body.email} is already used!`,
       });
+      // verrify the existing email
     } else {
       const retrieveFlight = await db
         .collection("flights")
@@ -233,7 +243,7 @@ const updateReservation = async (req, res) => {
   // supposed this method wil have a req.body with this format: {
   //   "reservation_id": "56d9dcad-3827-4928-9119-736cf48de632",
   // 	"updateFlightNumberTo": "SA235",
-  // 	"updateSeatTo": "4D",
+  // 	"updateSeatTo": "8D",
   // 	"updateGivenNameTo": "Boll",
   // 	"updateSurnameTo": "Freezee",
   // 	"updateEmailTo": "Boll@bFreezee.com"
@@ -262,7 +272,7 @@ const updateReservation = async (req, res) => {
       .collection("reservations")
       .findOne({ _id: body.reservation_id });
     // find the existing reservation with the provided reservation id
-    console.log("update", reservationWillBeUpdated);
+    // console.log("update", reservationWillBeUpdated);
 
     //
     // Verify the reservation that user want to change is found by id before make some changes on it
@@ -329,8 +339,9 @@ const updateReservation = async (req, res) => {
       //push the updatedReservation to  pushToUpdatedReservation collection for keep tracking purpose
       return res.status(200).json({
         status: 200,
+        data1: reservationWillBeUpdated,
         data: body,
-        message: `You successfully update reservation with id: ${body.reservation_id} `,
+        message: `You successfully update reservation with id: ${body.reservation_id}, (change from data1 to data) `,
       });
     }
     //
@@ -362,7 +373,26 @@ const updateReservation = async (req, res) => {
         message: `The seat  ${body.updateSeatTo} in flight ${body.updateFlightNumberTo} that you want to change to was already booked by another one or it does not exist `,
       });
     }
+
     //
+    // case new email is the same with esxting email. in that flight=>reject
+    const findReservationsInFlight = await db
+      .collection("reservations")
+      .find({ flight: body.updateFlightNumberTo })
+      .toArray();
+
+    const findExistingEmailInThisFlight = findReservationsInFlight.find(
+      (reservation) => reservation.email.toUpperCase() === newEmail
+    );
+    // console.log("findEmail", findExistingEmailInThisFlight);
+    if (newEmail !== oldEmail && findExistingEmailInThisFlight) {
+      return res.status(400).json({
+        status: 400,
+        data: {},
+        message: `Sorry, the email you want to change to is existing in the flight ${newFlight}'s reservations!`,
+      });
+    }
+
     //
     // Incase the user wants to change flight or seat number after verifying those numbers are still available or existing
 
@@ -415,8 +445,9 @@ const updateReservation = async (req, res) => {
 
           return res.status(200).json({
             status: 200,
+            data1: reservationWillBeUpdated,
             data: body,
-            message: `You successfully update reservation with id: ${body.reservation_id} `,
+            message: `You successfully update reservation with id: ${body.reservation_id}, change from data1 to data  `,
           });
         } catch (err) {
           console.log("err from returnOldSeatToAvailable", err);
