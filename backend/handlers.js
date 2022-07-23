@@ -399,8 +399,8 @@ const updateReservation = async (req, res) => {
     if (newFlight !== oldFlight || newSeat !== oldSeat) {
       const updateNewSeat = await db.collection("flights").updateOne(
         {
-          flight: body.updateFlightNumberTo,
-          "seats.id": body.updateSeatTo,
+          flight: newFlight,
+          "seats.id": newSeat,
         },
         { $set: { "seats.$.isAvailable": false } }
       );
@@ -412,8 +412,8 @@ const updateReservation = async (req, res) => {
             .collection("flights")
             .updateOne(
               {
-                flight: reservationWillBeUpdated.flight,
-                "seats.id": reservationWillBeUpdated.seat,
+                flight: oldFlight,
+                "seats.id": oldSeat,
               },
               { $set: { "seats.$.isAvailable": true } }
             );
