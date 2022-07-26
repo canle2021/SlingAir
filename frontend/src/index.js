@@ -1,10 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./components/App";
+import { SeatProvider } from "./components/SeatSelect/SeatContext";
 
 ReactDOM.render(
-  <React.StrictMode>
+  <SeatProvider>
     <App />
-  </React.StrictMode>,
+  </SeatProvider>,
   document.getElementById("root")
 );

@@ -1,12 +1,38 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useContext } from "react";
 import styled from "styled-components";
-
+import { SeatContext } from "./SeatContext";
 const Plane = ({}) => {
-  const [seating, setSeating] = useState([]);
+  const {
+    seating,
+    setSeating,
+    flightNumber,
+    setSeatId,
+    clickedSeatYet,
+    setClickedSeatYet,
+  } = useContext(SeatContext);
+
+  const handleChange = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
+
+    setSeatId((values) => ({ ...values, [name]: value }));
+    setClickedSeatYet(true);
+    // values is just a temperary variable which is holding an object contents inputs
+  };
 
   useEffect(() => {
     // TODO: get seating data for selected flight
-  }, []);
+    fetch(`api/get-flight/${flightNumber}`)
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        setSeating(data.data.seats);
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+  }, [flightNumber]);
 
   return (
     <Wrapper>
@@ -16,7 +42,12 @@ const Plane = ({}) => {
             <label>
               {seat.isAvailable ? (
                 <>
-                  <Seat type="radio" name="seat" onChange={() => {}} />
+                  <Seat
+                    type="radio"
+                    name="seat"
+                    value={seat.id}
+                    onChange={handleChange}
+                  />
                   <Available>{seat.id}</Available>
                 </>
               ) : (
@@ -101,7 +132,6 @@ const Available = styled(SeatNumber)`
   background: #fff;
   border: 1px solid var(--color-alabama-crimson);
   cursor: pointer;
-
   &.checked,
   &:hover {
     background: var(--color-alabama-crimson);
