@@ -1,11 +1,13 @@
 import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import { SeatContext } from "./SeatContext";
+import { useHistory } from "react-router-dom";
 const BookSeat = ({}) => {
   const { inputs, setInputs, seatId, flightNumber, clickedSeatYet } =
     useContext(SeatContext);
   const [values, setValues] = useState();
-
+  const history = useHistory();
+  let postingStatus = 0;
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
@@ -13,7 +15,6 @@ const BookSeat = ({}) => {
     // values is just a temperary variable which is holding an object contents inputs
   };
   console.log("choseSeat", seatId);
-  // history.push(`/`);
   const objectToBePosted = {
     flight: flightNumber,
     ...seatId,
@@ -36,14 +37,14 @@ const BookSeat = ({}) => {
       });
       const converToJson = await posting.json();
       window.alert(`${converToJson.message}`);
-
+      postingStatus = converToJson.status;
+      if (postingStatus === 200) {
+        history.push(`/confirmed`);
+      }
       console.log("converToJson", converToJson);
     } catch (err) {
       console.log(err);
     }
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
   };
   return (
     <>

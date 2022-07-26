@@ -29,7 +29,9 @@ const SeatSelect = ({}) => {
       <FlightSelectDiv>
         <span>FLIGHT NUMBERS</span>
         <select onChange={handleSelect}>
-          <option value={"Choose a flight"}>Choose a flight</option>
+          <option disabled selected>
+            Choose a flight
+          </option>
           {listOfFlights.map((flight, index) => {
             return (
               <option value={flight} key={index} name="flight">
