@@ -3,8 +3,16 @@ import styled from "styled-components";
 import { SeatContext } from "./SeatContext";
 import { useHistory } from "react-router-dom";
 const BookSeat = ({}) => {
-  const { inputs, setInputs, seatId, flightNumber, clickedSeatYet } =
-    useContext(SeatContext);
+  const {
+    inputs,
+    setInputs,
+    seatId,
+    flightNumber,
+    setFlightNumber,
+    clickedSeatYet,
+    reservationId,
+    setReservationId,
+  } = useContext(SeatContext);
   const [values, setValues] = useState();
   const history = useHistory();
   let postingStatus = 0;
@@ -14,7 +22,7 @@ const BookSeat = ({}) => {
     setValues((values) => ({ ...values, [name]: value }));
     // values is just a temperary variable which is holding an object contents inputs
   };
-  console.log("choseSeat", seatId);
+  //   console.log("choseSeat", seatId);
   const objectToBePosted = {
     flight: flightNumber,
     ...seatId,
@@ -39,6 +47,9 @@ const BookSeat = ({}) => {
       window.alert(`${converToJson.message}`);
       postingStatus = converToJson.status;
       if (postingStatus === 200) {
+        setReservationId(converToJson.reservationId);
+        localStorage.setItem("reservationId", `${converToJson.reservationId}`);
+        setFlightNumber(null);
         history.push(`/confirmed`);
       }
       console.log("converToJson", converToJson);

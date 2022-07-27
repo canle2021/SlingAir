@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import tombstone from "../assets/tombstone.png";
 import { SeatContext } from "./SeatSelect/SeatContext";
-const Confirmation = () => {
+const Reservation = () => {
   const { reservationId, setReservationId } = useContext(SeatContext);
   const [confirmedSeat, setConfirmedSeat] = useState({});
   const [retrievedFlightStatus, setRetrievedFlightStatus] = useState(null);
@@ -27,7 +27,7 @@ const Confirmation = () => {
   console.log("status", retrievedFlightStatus);
   return retrievedFlightStatus === 200 ? (
     <Wrapper>
-      <h1> Your flight is confirmed!</h1>
+      <h1> Your flight reservation:</h1>
       <p>Reservation number: {confirmedSeat._id}</p>
       <p>Flight number: {confirmedSeat.flight}</p>
       <p>Seat number: {confirmedSeat.seat}</p>
@@ -40,7 +40,7 @@ const Confirmation = () => {
     <Wrapper>
       <h1>
         Sorry! Please refresh your page or contact the customer service to see
-        your confirmation.
+        your reservation.
       </h1>
     </Wrapper>
   );
@@ -48,4 +48,4 @@ const Confirmation = () => {
 
 const Wrapper = styled.div``;
 
-export default Confirmation;
+export default Reservation;

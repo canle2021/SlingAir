@@ -208,6 +208,7 @@ const addReservation = async (req, res) => {
             return res.status(200).json({
               status: 200,
               data: req.body,
+              reservationId: newClient._id,
               message: `Your seat number: ${body.seat} at flight ${body.flight} was successfully booked `,
             });
           } catch (err) {

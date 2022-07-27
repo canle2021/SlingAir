@@ -2,11 +2,13 @@ import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 
 import slingairLogo from "../assets/logo_text.png";
-
+import { Link } from "react-router-dom";
 const Header = () => (
   <Wrapper>
     <Logo>
-      <h1>Sling Airlines</h1>
+      <Link to="/">
+        <h1>Sling Airlines</h1>
+      </Link>
     </Logo>
     <Nav>
       {/* TODO: only show link if the user has a reservation already */}

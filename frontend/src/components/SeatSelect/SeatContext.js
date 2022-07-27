@@ -8,6 +8,11 @@ export const SeatProvider = ({ children }) => {
   const [inputs, setInputs] = useState({});
   const [seatId, setSeatId] = useState(null);
   const [clickedSeatYet, setClickedSeatYet] = useState(false);
+  const [reservationId, setReservationId] = useState(
+    localStorage.getItem("reservationId")
+      ? localStorage.getItem("reservationId")
+      : ""
+  );
   return (
     <SeatContext.Provider
       value={{
@@ -24,6 +29,8 @@ export const SeatProvider = ({ children }) => {
         setSeatId,
         clickedSeatYet,
         setClickedSeatYet,
+        reservationId,
+        setReservationId,
       }}
     >
       {children}
