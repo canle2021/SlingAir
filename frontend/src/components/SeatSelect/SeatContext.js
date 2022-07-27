@@ -8,10 +8,11 @@ export const SeatProvider = ({ children }) => {
   const [inputs, setInputs] = useState({});
   const [seatId, setSeatId] = useState(null);
   const [clickedSeatYet, setClickedSeatYet] = useState(false);
+
   const [reservationId, setReservationId] = useState(
     localStorage.getItem("reservationId")
       ? localStorage.getItem("reservationId")
-      : ""
+      : null
   );
   return (
     <SeatContext.Provider

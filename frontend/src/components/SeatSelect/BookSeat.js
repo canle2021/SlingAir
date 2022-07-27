@@ -10,8 +10,11 @@ const BookSeat = ({}) => {
     flightNumber,
     setFlightNumber,
     clickedSeatYet,
+    setClickedSeatYet,
     reservationId,
     setReservationId,
+    showReservationButton,
+    setShowReservationButton,
   } = useContext(SeatContext);
   const [values, setValues] = useState();
   const history = useHistory();
@@ -50,6 +53,8 @@ const BookSeat = ({}) => {
         setReservationId(converToJson.reservationId);
         localStorage.setItem("reservationId", `${converToJson.reservationId}`);
         setFlightNumber(null);
+        setClickedSeatYet(false);
+        // set the confirm back to disable after booking successfully
         history.push(`/confirmed`);
       }
       console.log("converToJson", converToJson);
@@ -86,6 +91,7 @@ const BookSeat = ({}) => {
         <SubmitButton
           type="submit"
           onClick={handleSubmit}
+          value="Confirm"
           disabled={!clickedSeatYet}
         />
       </form>

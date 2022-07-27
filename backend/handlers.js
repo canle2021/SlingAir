@@ -122,7 +122,7 @@ const getSingleReservation = async (req, res) => {
     } else {
       return res.status(404).json({
         status: 404,
-        data: {},
+        data: _id,
         message: `The reservation with id: ${_id} was NOT found`,
       });
     }
@@ -157,7 +157,8 @@ const addReservation = async (req, res) => {
     return res.status(400).json({
       status: 400,
       data: {},
-      message: "Please fill out all the required information",
+      message:
+        "Sorry. Please provide all the required information including Flight number, Seat number, First name, Last name and Email address!",
     });
   }
   try {
@@ -508,7 +509,7 @@ const deleteReservation = async (req, res) => {
         } else {
           return res.status(400).json({
             status: 400,
-            data: _id,
+            data: {},
             message: ` Sorry, something's wrong with your deleting request. `,
           });
         }
@@ -518,8 +519,8 @@ const deleteReservation = async (req, res) => {
     } else {
       return res.status(400).json({
         status: 400,
-        data: _id,
-        message: ` Sorry, your reservation Id was not found. Please provide a correct one. `,
+        data: {},
+        message: ` Sorry, your reservation Id: ${_id} was not found. Please provide a correct one. `,
       });
     }
   } catch (err) {
