@@ -42,7 +42,7 @@ const FlightSelect = ({}) => {
           </Select>
         </Flight>
       </FlightSelectDiv>
-      <h2>Select your seat and Provide your information!</h2>
+      <Instruction>Select your seat and Provide your information!</Instruction>
       <Note>
         Please try to refresh your page to get the most updated available seats
         and flights.
@@ -54,7 +54,9 @@ const FlightSelect = ({}) => {
     </>
   );
 };
-
+const Instruction = styled.h2`
+  margin-top: 10px;
+`;
 const Select = styled.select`
   font-size: 16px;
 `;
@@ -64,10 +66,8 @@ const FlightSelectDiv = styled.div`
   min-height: 70px;
 `;
 const Flight = styled.div`
-  position: relative;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  padding: 20px;
+  margin: 0;
   margin-left: 20px;
   display: flex;
   h3 {
@@ -77,7 +77,6 @@ const Flight = styled.div`
 const PlaneAndBookSeatdiv = styled.div`
   display: flex;
   justify-content: center;
-  /* flex-direction: row; */
   align-items: center;
   align-content: center;
 `;

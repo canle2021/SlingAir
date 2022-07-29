@@ -32,18 +32,30 @@ const Reservation = () => {
         <Wrapper>
           <ReservationTitle> Your flight reservation:</ReservationTitle>
           <BreakLine></BreakLine>
-          <p>Reservation #: {confirmedSeat._id}</p>
-          <p>Flight #: {confirmedSeat.flight}</p>
-          <p>Seat #: {confirmedSeat.seat}</p>
           <p>
-            Name: {confirmedSeat.givenName} {confirmedSeat.surname}
+            <span>Reservation #:</span> {confirmedSeat._id}
           </p>
-          <p>Email: {confirmedSeat.email}</p>
+          <p>
+            <span>Flight #: </span>
+            {confirmedSeat.flight}
+          </p>
+          <p>
+            <span>Seat #: </span>
+            {confirmedSeat.seat}
+          </p>
+          <p>
+            <span>Name: </span>
+            {confirmedSeat.givenName} {confirmedSeat.surname}
+          </p>
+          <p>
+            <span>Email: </span>
+            {confirmedSeat.email}
+          </p>
         </Wrapper>
       ) : (
         <Wrapper>
           <h1>
-            Sorry. We could not get your reservation information on this time.
+            Sorry. We could not get your reservation information at this time.
             Please refresh your page or contact the customer service to see your
             reservation.
           </h1>
@@ -74,6 +86,10 @@ const Wrapper = styled.div`
   border: solid 2px var(--color-cadmium-red);
   padding: 20px;
   line-height: 2em;
+  span {
+    font-size: 1.2rem;
+    color: var(--color-cadmium-red);
+  }
 `;
 const ReservationDiv = styled.div`
   display: flex;

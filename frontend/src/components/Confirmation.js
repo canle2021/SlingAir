@@ -31,13 +31,25 @@ const Confirmation = () => {
         <Wrapper>
           <ConfirmTitle> Your flight is confirmed!</ConfirmTitle>
           <BreakLine></BreakLine>
-          <p>Reservation #: {confirmedSeat._id}</p>
-          <p>Flight #: {confirmedSeat.flight}</p>
-          <p>Seat #: {confirmedSeat.seat}</p>
           <p>
-            Name: {confirmedSeat.givenName} {confirmedSeat.surname}
+            <span>Reservation #:</span> {confirmedSeat._id}
           </p>
-          <p>Email: {confirmedSeat.email}</p>
+          <p>
+            <span>Flight #: </span>
+            {confirmedSeat.flight}
+          </p>
+          <p>
+            <span>Seat #: </span>
+            {confirmedSeat.seat}
+          </p>
+          <p>
+            <span>Name: </span>
+            {confirmedSeat.givenName} {confirmedSeat.surname}
+          </p>
+          <p>
+            <span>Email: </span>
+            {confirmedSeat.email}
+          </p>
         </Wrapper>
       ) : (
         <Wrapper>
@@ -67,17 +79,16 @@ const TomImg = styled.img`
   height: 150px;
   margin-top: 25px;
 `;
-const TombDiv = styled.div`
-  /* min-height: 100px;
-  justify-content: center;
-  align-items: center;
-  align-content: center; */
-`;
+const TombDiv = styled.div``;
 const Wrapper = styled.div`
   width: fit-content;
   border: solid 2px var(--color-cadmium-red);
   padding: 20px;
   line-height: 2em;
+  span {
+    font-size: 1.2rem;
+    color: var(--color-cadmium-red);
+  }
 `;
 const ConfirmationDiv = styled.div`
   display: flex;
