@@ -8,7 +8,7 @@ const Plane = ({}) => {
     flightNumber,
     setSeatId,
     seatId,
-    clickedSeatYet,
+
     setClickedSeatYet,
   } = useContext(SeatContext);
 
@@ -36,7 +36,7 @@ const Plane = ({}) => {
         });
     }
   }, [flightNumber]);
-  console.log("seatID, flight number", seatId, flightNumber);
+
   return (
     <Wrapper>
       {seating && seating.length > 0 ? (

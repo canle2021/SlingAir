@@ -4,7 +4,7 @@ import styled from "styled-components";
 import tombstone from "../assets/tombstone.png";
 import { SeatContext } from "./SeatSelect/SeatContext";
 const Reservation = () => {
-  const { reservationId, setReservationId } = useContext(SeatContext);
+  const { reservationId } = useContext(SeatContext);
   const [confirmedSeat, setConfirmedSeat] = useState({});
   const [retrievedFlightStatus, setRetrievedFlightStatus] = useState(null);
   useEffect(() => {
@@ -13,9 +13,6 @@ const Reservation = () => {
         return res.json();
       })
       .then((data) => {
-        console.log("datafromConfirm", data.data);
-        console.log("status", data.status);
-        console.log("data", data);
         setConfirmedSeat(data.data);
         setRetrievedFlightStatus(data.status);
       })
@@ -23,8 +20,6 @@ const Reservation = () => {
         console.log("err", err);
       });
   }, [reservationId]);
-  console.log("confirmedSeat,", confirmedSeat);
-  console.log("status", retrievedFlightStatus);
 
   return (
     <ReservationDiv>

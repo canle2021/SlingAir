@@ -28,7 +28,7 @@ const getFlights = async (req, res) => {
       .toArray();
     //   0 means except this key show all other’s keys value of MongoDB Collection.
     // 1 means show only given keys value. Of MongoDB Collection.
-    console.log("result", retrieveFlightList);
+
     if (retrieveFlightList) {
       retrieveFlightList.forEach((flight) => {
         flightsList.push(flight._id);
@@ -174,7 +174,6 @@ const addReservation = async (req, res) => {
         reservation.email.toLocaleLowerCase() === body.email.toLocaleLowerCase()
     );
 
-    console.log("group", findGroupOfreservations);
     if (findExistingEmailInThisFlight) {
       return res.status(400).json({
         status: 400,
@@ -205,7 +204,7 @@ const addReservation = async (req, res) => {
             const addReservation = await db
               .collection("reservations")
               .insertOne(newClient);
-            console.log("try to find", updateFlightSeat);
+
             return res.status(200).json({
               status: 200,
               data: req.body,

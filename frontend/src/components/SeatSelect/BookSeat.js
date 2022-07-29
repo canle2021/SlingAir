@@ -4,17 +4,14 @@ import { SeatContext } from "./SeatContext";
 import { useHistory } from "react-router-dom";
 const BookSeat = ({}) => {
   const {
-    inputs,
     setInputs,
     seatId,
     flightNumber,
     setFlightNumber,
     clickedSeatYet,
     setClickedSeatYet,
-    reservationId,
+
     setReservationId,
-    showReservationButton,
-    setShowReservationButton,
   } = useContext(SeatContext);
   const [values, setValues] = useState();
   const history = useHistory();
@@ -25,13 +22,12 @@ const BookSeat = ({}) => {
     setValues((values) => ({ ...values, [name]: value }));
     // values is just a temperary variable which is holding an object contents inputs
   };
-  //   console.log("choseSeat", seatId);
+
   const objectToBePosted = {
     flight: flightNumber,
     ...seatId,
     ...values,
   };
-  //   console.log("objectToBePosted", objectToBePosted);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -57,7 +53,6 @@ const BookSeat = ({}) => {
         // set the confirm back to disable after booking successfully
         history.push(`/confirmed`);
       }
-      console.log("converToJson", converToJson);
     } catch (err) {
       console.log(err);
     }

@@ -5,7 +5,7 @@ import BookSeat from "./BookSeat";
 import { SeatContext } from "./SeatContext";
 import { createGlobalStyle } from "styled-components";
 const FlightSelect = ({}) => {
-  const { flightNumber, setFlightNumber, listOfFlights, setListOfFlights } =
+  const { setFlightNumber, listOfFlights, setListOfFlights } =
     useContext(SeatContext);
 
   const handleSelect = (event) => {

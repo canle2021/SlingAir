@@ -6,7 +6,7 @@ import slingairLogo from "../assets/logo_text.png";
 import { Link } from "react-router-dom";
 import { SeatContext } from "./SeatSelect/SeatContext";
 const Header = () => {
-  const { reservationId, setFlightNumber } = useContext(SeatContext);
+  const { reservationId } = useContext(SeatContext);
 
   return (
     <Wrapper>
