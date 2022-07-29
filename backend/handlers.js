@@ -161,6 +161,15 @@ const addReservation = async (req, res) => {
         "Sorry. Please provide all the required information including Flight number, Seat number, First name, Last name and Email address!",
     });
   }
+  if (!body.email.includes("@")) {
+    return res.status(400).json({
+      status: 400,
+      data: {},
+      message:
+        "Sorry. Please provide the correct form of email address(including @)",
+    });
+  }
+
   try {
     await client.connect();
 
