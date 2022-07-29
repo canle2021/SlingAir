@@ -17,6 +17,7 @@ const App = () => {
           <Route exact path="/">
             <SeatSelect />
           </Route>
+
           <Route exact path="/confirmed">
             <Confirmation />
           </Route>
@@ -30,12 +31,14 @@ const App = () => {
     </BrowserRouter>
   );
 };
-
+const SeatSelectDiv = styled.div`
+  /* margin-top: 20px; */
+`;
 const Main = styled.div`
   background: var(--color-orange);
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 110px);
+  height: calc(100vh - 110px - 24px);
 `;
 
 export default App;

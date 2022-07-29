@@ -7,10 +7,7 @@ import { Link } from "react-router-dom";
 import { SeatContext } from "./SeatSelect/SeatContext";
 const Header = () => {
   const { reservationId, setFlightNumber } = useContext(SeatContext);
-  const handleClick = () => {
-    return setFlightNumber(null);
-    // this step makes sure that if we come back to the "/" page from clicking reservation button, we always have the empty plane to ask the user to chose the flight again to have the newest seats status from data server.
-  };
+
   return (
     <Wrapper>
       <Logo>
@@ -22,9 +19,7 @@ const Header = () => {
         <Nav>
           {/* TODO: only show link if the user has a reservation already */}
           <>
-            <StyledNavLink to="/view-reservation" onClick={handleClick()}>
-              Reservation
-            </StyledNavLink>
+            <StyledNavLink to="/view-reservation">Reservation</StyledNavLink>
           </>
         </Nav>
       ) : null}

@@ -63,52 +63,62 @@ const BookSeat = ({}) => {
     }
   };
   return (
-    <>
-      <form onSubmit={handleSubmit}>
-        <input
+    <BookDiv>
+      <Form onSubmit={handleSubmit}>
+        <Input
           placeholder="First Name"
           type="text"
           name="givenName"
-          //   value={values ? values.name : ""}
           onChange={handleChange}
         />
 
-        <input
+        <Input
           placeholder="Last Name"
           type="text"
           name="surname"
-          //   value={values.lastName || ""}
           onChange={handleChange}
         />
-        <input
+        <Input
           placeholder="Email"
           type="email"
           name="email"
-          //   value={values.email || ""}
           onChange={handleChange}
         />
 
         <SubmitButton
           type="submit"
-          onClick={handleSubmit}
           value="Confirm"
           disabled={!clickedSeatYet}
-        />
-      </form>
-    </>
+          name="confirmButton"
+          className={!clickedSeatYet ? "disabled" : ""}
+        ></SubmitButton>
+      </Form>
+    </BookDiv>
   );
 };
-const SubmitButton = styled.input`
-  cursor: pointer;
-`;
 
-const Form = styled.form``;
-const Input = styled.input``;
-const TypingArea = styled.input`
-  ::placeholder {
-    opacity: 0.3;
+const SubmitButton = styled.input`
+  font-family: var(--font-heading);
+  background-color: var(--color-alabama-crimson);
+  color: #fff;
+  cursor: pointer;
+  font-family: var("Permanent Marker", Arial, Helvetica, sans-serif);
+  &.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
   }
 `;
-const BookDiv = styled.div``;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  padding: 25px;
+`;
+const Input = styled.input``;
+
+const BookDiv = styled.div`
+  border: solid 2px var(--color-alabama-crimson);
+  height: fit-content;
+`;
 
 export default BookSeat;

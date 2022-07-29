@@ -1,3 +1,3 @@
-import SeatSelect from "./SeatSelect";
+import FlightSelect from "./FlightSelect";
 
-export default SeatSelect;
+export default FlightSelect;

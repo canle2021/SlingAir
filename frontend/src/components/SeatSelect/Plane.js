@@ -7,6 +7,7 @@ const Plane = ({}) => {
     setSeating,
     flightNumber,
     setSeatId,
+    seatId,
     clickedSeatYet,
     setClickedSeatYet,
   } = useContext(SeatContext);
@@ -22,18 +23,20 @@ const Plane = ({}) => {
 
   useEffect(() => {
     // TODO: get seating data for selected flight
-    fetch(`api/get-flight/${flightNumber}`)
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setSeating(data.data.seats);
-      })
-      .catch((err) => {
-        console.log("err", err);
-      });
+    if (flightNumber && flightNumber !== "default") {
+      fetch(`api/get-flight/${flightNumber}`)
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          setSeating(data.data.seats);
+        })
+        .catch((err) => {
+          console.log("err", err);
+        });
+    }
   }, [flightNumber]);
-
+  console.log("seatID, flight number", seatId, flightNumber);
   return (
     <Wrapper>
       {seating && seating.length > 0 ? (
@@ -48,7 +51,11 @@ const Plane = ({}) => {
                     value={seat.id}
                     onChange={handleChange}
                   />
-                  <Available>{seat.id}</Available>
+                  <Available
+                    className={seatId?.seat === seat.id ? "checked" : ""}
+                  >
+                    {seat.id}
+                  </Available>
                 </>
               ) : (
                 <Unavailable>{seat.id}</Unavailable>
@@ -104,7 +111,6 @@ const Seat = styled.input`
   height: 30px;
   width: 30px;
   margin: 0;
-
   &:checked {
     span {
       background: var(--color-alabama-crimson);
