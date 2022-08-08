@@ -15,7 +15,6 @@ const BookSeat = ({}) => {
   } = useContext(SeatContext);
   const [values, setValues] = useState();
   const history = useHistory();
-  let postingStatus = 0;
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
@@ -44,8 +43,8 @@ const BookSeat = ({}) => {
       });
       const converToJson = await posting.json();
       window.alert(`${converToJson.message}`);
-      postingStatus = converToJson.status;
-      if (postingStatus === 200) {
+
+      if (converToJson.status === 200) {
         setReservationId(converToJson.reservationId);
         localStorage.setItem("reservationId", `${converToJson.reservationId}`);
         setFlightNumber(null);
