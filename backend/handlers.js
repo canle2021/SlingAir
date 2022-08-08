@@ -218,10 +218,7 @@ const addReservation = async (req, res) => {
               status: 200,
               data: req.body,
               reservationId: newClient._id,
-              //     we can do like this instead: data: {
-              //       ...req.body,
-              //       reservationId: newClient._id,
-              //  }
+
               message: `Your seat number: ${body.seat} at flight ${body.flight} was successfully booked `,
             });
           } catch (err) {
