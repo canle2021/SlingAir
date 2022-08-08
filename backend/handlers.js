@@ -218,6 +218,10 @@ const addReservation = async (req, res) => {
               status: 200,
               data: req.body,
               reservationId: newClient._id,
+              //     we can do like this instead: data: {
+              //       ...req.body,
+              //       reservationId: newClient._id,
+              //  }
               message: `Your seat number: ${body.seat} at flight ${body.flight} was successfully booked `,
             });
           } catch (err) {
@@ -349,8 +353,10 @@ const updateReservation = async (req, res) => {
       //push the updatedReservation to  pushToUpdatedReservation collection for keep tracking purpose
       return res.status(200).json({
         status: 200,
-        data1: reservationWillBeUpdated,
-        data: body,
+        data: {
+          updatedReservation: reservationWillBeUpdated,
+          requestedChanges: body,
+        },
         message: `You successfully update reservation with id: ${body.reservation_id}, (change from data1 to data) `,
       });
     }
