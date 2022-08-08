@@ -30,7 +30,7 @@ const getFlights = async (req, res) => {
     // 1 means show only given keys value. Of MongoDB Collection.
 
     if (retrieveFlightList) {
-      retrieveFlightList.forEach((flight) => {
+      retrieveFlightList.map((flight) => {
         flightsList.push(flight._id);
       });
       return res.status(200).json({
