@@ -515,11 +515,7 @@ const deleteReservation = async (req, res) => {
             .collection("deletedReservations")
             .insertOne(deletedReservation);
           // push deleted reservation to deletedReservations collection in mongoDb to keep track what has been deleted
-          return res.status(204).json({
-            status: 204,
-            data: req.body,
-            message: `Your reservation id: ${_id} at flight ${lookUpReservationId.flight} was successfully deleted `,
-          });
+          return res.status(204).send();
         } else {
           return res.status(400).json({
             status: 400,
