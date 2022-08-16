@@ -17,7 +17,6 @@ const { flights, reservations } = require("./data");
 
 // returns a list of all flights
 const getFlights = async (req, res) => {
-  const flightsList = [];
   try {
     await client.connect();
 
@@ -30,9 +29,10 @@ const getFlights = async (req, res) => {
     // 1 means show only given keys value. Of MongoDB Collection.
 
     if (retrieveFlightList) {
-      retrieveFlightList.map((flight) => {
-        flightsList.push(flight._id);
+      const flightsList = retrieveFlightList.map((flight) => {
+        return flight._id;
       });
+
       return res.status(200).json({
         status: 200,
         data: flightsList,
