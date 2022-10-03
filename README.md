@@ -1,1 +1,1 @@
-Hi, This is one of my Concordia Bootcamps Projects. Here is the demo video link: https://youtu.be/k58RwO8WnY8
+Hi, This is one of my Concordia Diploma in Full-Stack Web Development projects. Here is the demo video link: https://youtu.be/k58RwO8WnY8
